@@ -68,19 +68,31 @@
 
 /* First part of user prologue.  */
 #line 1 "bnf.y"
- 
-    #include<string.h> 
-    #include<stdio.h> 
-    struct quad{ 
-        char op[5]; char arg1[10]; char arg2[10]; char result[10]; 
-    }QUAD[30]; 
-    struct stack{ 
-        int items[100]; int top; 
-    }stk; 
-    int Index=0,tIndex=0,StNo,Ind,tInd; 
-    extern int LineNo; 
 
-#line 84 "y.tab.c"
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+
+    void AddQuadruple(char op[5], char arg1[10], char arg2[10], char result[10]);
+    int pop();
+    void push(int data);
+
+    int Index = 0, tIndex = 0, StNo, Ind, tInd;
+    extern int yylineno;
+
+    struct quad {
+        char op[5];
+        char arg1[10];
+        char arg2[10];
+        char result[10];
+    } QUAD[30];
+
+    struct stack {
+        int items[100];
+        int top;
+    } stk;
+
+#line 96 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -153,11 +165,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 14 "bnf.y"
- 
-    char var[10]; 
+#line 26 "bnf.y"
 
-#line 161 "y.tab.c"
+    char var[10];
+
+#line 173 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -601,12 +613,12 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    22,    22,    23,    24,    24,    24,    25,    25,    25,
-      25,    26,    27,    27,    28,    36,    37,    38,    39,    40,
-      41,    42,    42,    44,    50,    51,    51,    67,    67,    77,
-      78,    78,    79,    86,    86
+       0,    39,    39,    42,    45,    46,    47,    50,    51,    52,
+      53,    56,    59,    60,    63,    72,    73,    74,    75,    76,
+      77,    78,    79,    82,    88,    91,    91,   109,   109,   121,
+     122,   123,   126,   134,   134
 };
 #endif
 
@@ -1202,156 +1214,162 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 14: /* ASSIGNMENT: VAR '=' EXPR  */
-#line 28 "bnf.y"
-                        { 
-    strcpy(QUAD[Index].op,"="); 
-    strcpy(QUAD[Index].arg1,(yyvsp[0].var));  
-    strcpy(QUAD[Index].arg2,""); 
-    strcpy(QUAD[Index].result,(yyvsp[-2].var));  
-    strcpy((yyval.var),QUAD[Index++].result); 
-}
-#line 1215 "y.tab.c"
-    break;
-
-  case 15: /* EXPR: EXPR '+' EXPR  */
-#line 36 "bnf.y"
-                    {AddQuadruple("+",(yyvsp[-2].var),(yyvsp[0].var),(yyval.var));}
+  case 2: /* PROGRAM: MAIN BLOCK  */
+#line 39 "bnf.y"
+                     { printf(""); }
 #line 1221 "y.tab.c"
     break;
 
-  case 16: /* EXPR: EXPR '-' EXPR  */
-#line 37 "bnf.y"
-                {AddQuadruple("-",(yyvsp[-2].var),(yyvsp[0].var),(yyval.var));}
-#line 1227 "y.tab.c"
-    break;
-
-  case 17: /* EXPR: EXPR '*' EXPR  */
-#line 38 "bnf.y"
-                {AddQuadruple("*",(yyvsp[-2].var),(yyvsp[0].var),(yyval.var));}
+  case 14: /* ASSIGNMENT: VAR '=' EXPR  */
+#line 63 "bnf.y"
+                         {
+        strcpy(QUAD[Index].op, "=");
+        strcpy(QUAD[Index].arg1, (yyvsp[0].var));
+        strcpy(QUAD[Index].arg2, "");
+        strcpy(QUAD[Index].result, (yyvsp[-2].var));
+        strcpy((yyval.var), QUAD[Index++].result);
+    }
 #line 1233 "y.tab.c"
     break;
 
-  case 18: /* EXPR: EXPR '/' EXPR  */
-#line 39 "bnf.y"
-                {AddQuadruple("/",(yyvsp[-2].var),(yyvsp[0].var),(yyval.var));}
+  case 15: /* EXPR: EXPR '+' EXPR  */
+#line 72 "bnf.y"
+                    { AddQuadruple("+", (yyvsp[-2].var), (yyvsp[0].var), (yyval.var)); }
 #line 1239 "y.tab.c"
     break;
 
-  case 19: /* EXPR: '-' EXPR  */
-#line 40 "bnf.y"
-           {AddQuadruple("UMIN",(yyvsp[0].var),"",(yyval.var));}
+  case 16: /* EXPR: EXPR '-' EXPR  */
+#line 73 "bnf.y"
+                    { AddQuadruple("-", (yyvsp[-2].var), (yyvsp[0].var), (yyval.var)); }
 #line 1245 "y.tab.c"
     break;
 
-  case 20: /* EXPR: '(' EXPR ')'  */
-#line 41 "bnf.y"
-               {strcpy((yyval.var),(yyvsp[-1].var));}
+  case 17: /* EXPR: EXPR '*' EXPR  */
+#line 74 "bnf.y"
+                    { AddQuadruple("*", (yyvsp[-2].var), (yyvsp[0].var), (yyval.var)); }
 #line 1251 "y.tab.c"
     break;
 
+  case 18: /* EXPR: EXPR '/' EXPR  */
+#line 75 "bnf.y"
+                    { AddQuadruple("/", (yyvsp[-2].var), (yyvsp[0].var), (yyval.var)); }
+#line 1257 "y.tab.c"
+    break;
+
+  case 19: /* EXPR: '-' EXPR  */
+#line 76 "bnf.y"
+               { AddQuadruple("UMIN", (yyvsp[0].var), "", (yyval.var)); }
+#line 1263 "y.tab.c"
+    break;
+
+  case 20: /* EXPR: '(' EXPR ')'  */
+#line 77 "bnf.y"
+                   { strcpy((yyval.var), (yyvsp[-1].var)); }
+#line 1269 "y.tab.c"
+    break;
+
   case 23: /* CONDST: IFST  */
-#line 44 "bnf.y"
-            { 
-    Ind=pop(); 
-    sprintf(QUAD[Ind].result,"%d",Index); 
-    Ind=pop();  
-    sprintf(QUAD[Ind].result,"%d",Index); 
-}
-#line 1262 "y.tab.c"
+#line 82 "bnf.y"
+             {
+        Ind = pop();
+        sprintf(QUAD[Ind].result, "%d", Index);
+        Ind = pop();
+        sprintf(QUAD[Ind].result, "%d", Index);
+    }
+#line 1280 "y.tab.c"
     break;
 
   case 25: /* $@1: %empty  */
-#line 51 "bnf.y"
-                           { 
-    strcpy(QUAD[Index].op,"=="); 
-    strcpy(QUAD[Index].arg1,(yyvsp[-1].var));  
-    strcpy(QUAD[Index].arg2,"FALSE"); 
-    strcpy(QUAD[Index].result,"-1"); 
-    push(Index); 
-    Index++;
-}
-#line 1275 "y.tab.c"
+#line 91 "bnf.y"
+                           {
+        strcpy(QUAD[Index].op, "==");
+        strcpy(QUAD[Index].arg1, (yyvsp[-1].var));
+        strcpy(QUAD[Index].arg2, "FALSE");
+        strcpy(QUAD[Index].result, "-1");
+        push(Index);
+        Index++;
+    }
+#line 1293 "y.tab.c"
     break;
 
   case 26: /* IFST: IF '(' CONDITION ')' $@1 BLOCK  */
-#line 59 "bnf.y"
-      { 
-    strcpy(QUAD[Index].op,"GOTO"); 
-    strcpy(QUAD[Index].arg1,""); 
-    strcpy(QUAD[Index].arg2,""); 
-    strcpy(QUAD[Index].result,"-1"); 
-    push(Index); 
-    Index++; 
-}
-#line 1288 "y.tab.c"
+#line 99 "bnf.y"
+          {
+        strcpy(QUAD[Index].op, "GOTO");
+        strcpy(QUAD[Index].arg1, "");
+        strcpy(QUAD[Index].arg2, "");
+        strcpy(QUAD[Index].result, "-1");
+        push(Index);
+        Index++;
+    }
+#line 1306 "y.tab.c"
     break;
 
   case 27: /* $@2: %empty  */
-#line 67 "bnf.y"
-            { 
-    tInd=pop(); 
-    Ind=pop(); 
-    push(tInd); 
-    sprintf(QUAD[Ind].result,"%d",Index); 
-}
-#line 1299 "y.tab.c"
+#line 109 "bnf.y"
+             {
+        tInd = pop();
+        Ind = pop();
+        push(tInd);
+        sprintf(QUAD[Ind].result, "%d", Index);
+    }
+#line 1317 "y.tab.c"
     break;
 
   case 28: /* ELSEST: ELSE $@2 BLOCK  */
-#line 73 "bnf.y"
-     { 
-    Ind=pop(); 
-    sprintf(QUAD[Ind].result,"%d",Index); 
-}
-#line 1308 "y.tab.c"
+#line 115 "bnf.y"
+          {
+        Ind = pop();
+        sprintf(QUAD[Ind].result, "%d", Index);
+    }
+#line 1326 "y.tab.c"
     break;
 
   case 29: /* CONDITION: VAR RELOP VAR  */
-#line 77 "bnf.y"
-                         {AddQuadruple((yyvsp[-1].var),(yyvsp[-2].var),(yyvsp[0].var),(yyval.var)); StNo=Index-1; }
-#line 1314 "y.tab.c"
+#line 121 "bnf.y"
+                         { AddQuadruple((yyvsp[-1].var), (yyvsp[-2].var), (yyvsp[0].var), (yyval.var)); StNo = Index - 1; }
+#line 1332 "y.tab.c"
     break;
 
   case 32: /* WHILEST: WHILELOOP  */
-#line 79 "bnf.y"
-                  { 
-    Ind=pop(); 
-    sprintf(QUAD[Ind].result,"%d",StNo); 
-    Ind=pop();  
-    sprintf(QUAD[Ind].result,"%d",Index); 
-}
-#line 1325 "y.tab.c"
+#line 126 "bnf.y"
+                   {
+        Ind = pop();
+        sprintf(QUAD[Ind].result, "%d", StNo);
+        Ind = pop();
+        sprintf(QUAD[Ind].result, "%d", Index);
+    }
+#line 1343 "y.tab.c"
     break;
 
   case 33: /* $@3: %empty  */
-#line 86 "bnf.y"
-                                   { 
-    strcpy(QUAD[Index].op,"=="); 
-    strcpy(QUAD[Index].arg1,(yyvsp[-1].var));  
-    strcpy(QUAD[Index].arg2,"FALSE"); 
-    strcpy(QUAD[Index].result,"-1"); 
-    push(Index); 
-    Index++; 
-}
-#line 1338 "y.tab.c"
+#line 134 "bnf.y"
+                                   {
+        strcpy(QUAD[Index].op, "==");
+        strcpy(QUAD[Index].arg1, (yyvsp[-1].var));
+        strcpy(QUAD[Index].arg2, "FALSE");
+        strcpy(QUAD[Index].result, "-1");
+        push(Index);
+        Index++;
+    }
+#line 1356 "y.tab.c"
     break;
 
   case 34: /* WHILELOOP: WHILE '(' CONDITION ')' $@3 BLOCK  */
-#line 94 "bnf.y"
-      { 
-    strcpy(QUAD[Index].op,"GOTO"); 
-    strcpy(QUAD[Index].arg1,""); 
-    strcpy(QUAD[Index].arg2,""); 
-    strcpy(QUAD[Index].result,"-1"); 
-    push(Index); 
-    Index++; 
-}
-#line 1351 "y.tab.c"
+#line 142 "bnf.y"
+          {
+        strcpy(QUAD[Index].op, "GOTO");
+        strcpy(QUAD[Index].arg1, "");
+        strcpy(QUAD[Index].arg2, "");
+        strcpy(QUAD[Index].result, "-1");
+        push(Index);
+        Index++;
+    }
+#line 1369 "y.tab.c"
     break;
 
 
-#line 1355 "y.tab.c"
+#line 1373 "y.tab.c"
 
       default: break;
     }
@@ -1544,51 +1562,64 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 102 "bnf.y"
- 
-extern FILE *yyin; 
-int main(int argc,char *argv[]) { 
-    FILE *fp; 
-    int i; 
-    if(argc>1) { 
-        fp=fopen(argv[1],"r"); 
-        if(!fp) { 
-            printf("\n File not found"); 
-            exit(0); 
-        } 
-        yyin=fp; 
-    } 
-    yyparse(); 
-    printf("\n\n\t\t ----------------------------""\n\t\t Pos Operator Arg1 Arg2 Result" "\n\t\t --------------------"); 
-    for(i=0;i<Index;i++) { 
-        printf("\n\t\t %d\t %s\t %s\t %s\t %s",i,QUAD[i].op,QUAD[i].arg1,QUAD[i].arg2,QUAD[i].result); 
-    } 
-    printf("\n\t\t -----------------------"); printf("\n\n"); 
-    return 0; 
-} 
+#line 152 "bnf.y"
 
-void push(int data){ 
-    stk.top++; 
-    if(stk.top==100)  { 
-        printf("\n Stack overflow\n"); 
-        exit(0); 
-    } 
-    stk.items[stk.top]=data; 
-} 
-int pop() { 
-    int data; 
-    if(stk.top==-1) { 
-        printf("\n Stack underflow\n"); 
+
+extern FILE *yyin;
+
+int main(int argc, char *argv[]) {
+    FILE *fp;
+    int i;
+
+    if (argc > 1) {
+        fp = fopen(argv[1], "r");
+        if (!fp) {
+            printf("\n File not found\n");
+            exit(0);
+        }
+        yyin = fp;
+    }
+
+    yyparse();
+
+    printf("\n----------------------------");
+    printf("\nPos Operator Arg1 Arg2 Result");
+    printf("\n----------------------------");
+    for (i = 0; i < Index; i++) {
+        printf("\n%d\t%s\t%s\t%s\t%s", i, QUAD[i].op, QUAD[i].arg1, QUAD[i].arg2, QUAD[i].result);
+    }
+    printf("\n----------------------------\n\n");
+
+    return 0;
+}
+
+void push(int data) {
+    stk.top++;
+    if (stk.top == 100) {
+        printf("\n Stack overflow\n");
         exit(0);
-    } 
-    data=stk.items[stk.top--]; 
-    return data; 
-} 
-void AddQuadruple(char op[5],char arg1[10],char arg2[10],char result[10]) { 
-    strcpy(QUAD[Index].op,op); 
-    strcpy(QUAD[Index].arg1,arg1);  
-    strcpy(QUAD[Index].arg2,arg2); 
-    sprintf(QUAD[Index].result,"t%d",tIndex++);  
-    strcpy(result,QUAD[Index++].result); 
-} 
-yyerror() { printf("\n Error on line no:%d",LineNo); }
+    }
+    stk.items[stk.top] = data;
+}
+
+int pop() {
+    int data;
+    if (stk.top == -1) {
+        printf("\n Stack underflow\n");
+        exit(0);
+    }
+    data = stk.items[stk.top--];
+    return data;
+}
+
+void AddQuadruple(char op[5], char arg1[10], char arg2[10], char result[10]) {
+    strcpy(QUAD[Index].op, op);
+    strcpy(QUAD[Index].arg1, arg1);
+    strcpy(QUAD[Index].arg2, arg2);
+    sprintf(QUAD[Index].result, "t%d", tIndex++);
+    strcpy(result, QUAD[Index++].result);
+}
+
+void yyerror(char const *s) {
+    fprintf(stderr, "Syntax error at line %d: %s\n", yylineno, s);
+}
